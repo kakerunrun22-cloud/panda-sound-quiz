@@ -21,10 +21,11 @@ const Index = () => {
   const [score, setScore] = useState(0);
   const [answered, setAnswered] = useState(false);
   const [wasCorrect, setWasCorrect] = useState(false);
+  const [questions, setQuestions] = useState<QuizQuestion[]>(() => pickRandom(quizData, QUIZ_COUNT));
   const { isPlaying, play } = useAudioPlayer();
 
-  const question: QuizQuestion | undefined = quizData[currentQ];
-  const totalQuestions = quizData.length;
+  const question: QuizQuestion | undefined = questions[currentQ];
+  const totalQuestions = questions.length;
   const scorePercent = Math.round((score / totalQuestions) * 100);
 
   const handleAnswer = (answeredPanda: boolean) => {
