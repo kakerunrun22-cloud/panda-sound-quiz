@@ -1,10 +1,17 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import PandaDoctor from "@/components/PandaDoctor";
 import ProgressBar from "@/components/ProgressBar";
 import AudioPlayerButton from "@/components/AudioPlayerButton";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { quizData, type QuizQuestion } from "@/data/quizData";
 import { Share2, RotateCcw } from "lucide-react";
+
+const QUIZ_COUNT = 5;
+
+function pickRandom(arr: QuizQuestion[], n: number): QuizQuestion[] {
+  const shuffled = [...arr].sort(() => Math.random() - 0.5);
+  return shuffled.slice(0, n);
+}
 
 type Screen = "start" | "quiz" | "result" | "final";
 
