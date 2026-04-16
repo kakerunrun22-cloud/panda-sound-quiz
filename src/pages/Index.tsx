@@ -1,10 +1,17 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import PandaDoctor from "@/components/PandaDoctor";
 import ProgressBar from "@/components/ProgressBar";
 import AudioPlayerButton from "@/components/AudioPlayerButton";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { quizData, type QuizQuestion } from "@/data/quizData";
 import { Share2, RotateCcw } from "lucide-react";
+
+const QUIZ_COUNT = 5;
+
+function pickRandom(arr: QuizQuestion[], n: number): QuizQuestion[] {
+  const shuffled = [...arr].sort(() => Math.random() - 0.5);
+  return shuffled.slice(0, n);
+}
 
 type Screen = "start" | "quiz" | "result" | "final";
 
@@ -14,10 +21,11 @@ const Index = () => {
   const [score, setScore] = useState(0);
   const [answered, setAnswered] = useState(false);
   const [wasCorrect, setWasCorrect] = useState(false);
+  const [questions, setQuestions] = useState<QuizQuestion[]>(() => pickRandom(quizData, QUIZ_COUNT));
   const { isPlaying, play } = useAudioPlayer();
 
-  const question: QuizQuestion | undefined = quizData[currentQ];
-  const totalQuestions = quizData.length;
+  const question: QuizQuestion | undefined = questions[currentQ];
+  const totalQuestions = questions.length;
   const scorePercent = Math.round((score / totalQuestions) * 100);
 
   const handleAnswer = (answeredPanda: boolean) => {
@@ -44,6 +52,7 @@ const Index = () => {
     setCurrentQ(0);
     setScore(0);
     setAnswered(false);
+    setQuestions(pickRandom(quizData, QUIZ_COUNT));
   };
 
   const handleShare = () => {
