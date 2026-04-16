@@ -9,7 +9,7 @@ export interface QuizQuestion {
 export const quizData: QuizQuestion[] = [
   {
     id: 1,
-    audioUrl: "/audio/panda-bleat.mp3",
+    audioUrl: "/audio/panda-goat.mp3",
     isRealPanda: true,
     animalLabel: "パンダの鳴き声",
     explanation:
@@ -25,26 +25,66 @@ export const quizData: QuizQuestion[] = [
   },
   {
     id: 3,
-    audioUrl: "/audio/panda-chirp.mp3",
+    audioUrl: "/audio/panda-sealion.mp3",
     isRealPanda: true,
     animalLabel: "パンダの鳴き声",
     explanation:
-      "パンダは小鳥のような「チュンチュン」という声も出せるんだパフ！これは求愛の時に使う特別な声なんだよ。",
+      "パンダはオットセイのような「アウアウ」という声も出せるんだパフ！これは威嚇や興奮した時に使う声なんだよ。",
   },
   {
     id: 4,
-    audioUrl: "/audio/bird.mp3",
+    audioUrl: "/audio/sealion.mp3",
     isRealPanda: false,
-    animalLabel: "小鳥の鳴き声",
+    animalLabel: "オットセイの鳴き声",
     explanation:
-      "これは小鳥の声だったパフ。パンダの求愛の声とよく似ているけど、小鳥の方がもっと高い音を出すんだよ！",
+      "これはオットセイの声だったパフ。パンダの威嚇の声とよく似ているけど、オットセイの方がもっと太い声を出すんだよ！",
   },
   {
     id: 5,
-    audioUrl: "/audio/panda-honk.mp3",
+    audioUrl: "/audio/panda-dog.mp3",
     isRealPanda: true,
     animalLabel: "パンダの鳴き声",
     explanation:
-      "パンダは怒った時に「ガーッ」というクラクションのような声を出すパフ！体は大きいけど、普段はとても穏やかな動物なんだよ。",
+      "パンダは犬のような「ワンワン」に近い声も出すんだパフ！怒った時や驚いた時にこの声を出すことがあるよ。",
+  },
+  {
+    id: 6,
+    audioUrl: "/audio/dog.mp3",
+    isRealPanda: false,
+    animalLabel: "犬の鳴き声",
+    explanation:
+      "これは犬の声だったパフ！パンダの声と比べると、犬の方がもっとはっきりした声を出すんだよ。",
+  },
+  {
+    id: 7,
+    audioUrl: "/audio/panda-puppy.mp3",
+    isRealPanda: true,
+    animalLabel: "パンダの鳴き声",
+    explanation:
+      "赤ちゃんパンダは子犬のような甘えた声を出すんだパフ！お母さんパンダに甘える時によくこの声を使うよ。",
+  },
+  {
+    id: 8,
+    audioUrl: "/audio/puppy.mp3",
+    isRealPanda: false,
+    animalLabel: "子犬の鳴き声",
+    explanation:
+      "これは子犬の声だったパフ。赤ちゃんパンダの甘え声とそっくりだけど、子犬の方がもっとキュンキュンした声なんだよ！",
+  },
+  {
+    id: 9,
+    audioUrl: "/audio/panda-horse.mp3",
+    isRealPanda: true,
+    animalLabel: "パンダの鳴き声",
+    explanation:
+      "パンダは馬のいななきのような声も出せるんだパフ！これはとても珍しい鳴き方で、興奮した時に出すことがあるよ。",
+  },
+  {
+    id: 10,
+    audioUrl: "/audio/horse.mp3",
+    isRealPanda: false,
+    animalLabel: "馬の鳴き声",
+    explanation:
+      "これは馬の声だったパフ！パンダの声と比べると、馬の方がずっと力強くて長い声を出すんだよ。",
   },
 ];
