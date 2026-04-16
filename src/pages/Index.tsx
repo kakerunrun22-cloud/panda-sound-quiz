@@ -1,10 +1,13 @@
-import { useState, useMemo } from "react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 import PandaDoctor from "@/components/PandaDoctor";
 import ProgressBar from "@/components/ProgressBar";
 import AudioPlayerButton from "@/components/AudioPlayerButton";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
+import { useEncyclopedia } from "@/hooks/useEncyclopedia";
 import { quizData, type QuizQuestion } from "@/data/quizData";
-import { Share2, RotateCcw } from "lucide-react";
+import { Share2, RotateCcw, BookOpen } from "lucide-react";
 
 const QUIZ_COUNT = 5;
 
@@ -16,6 +19,7 @@ function pickRandom(arr: QuizQuestion[], n: number): QuizQuestion[] {
 type Screen = "start" | "quiz" | "result" | "final";
 
 const Index = () => {
+  const navigate = useNavigate();
   const [screen, setScreen] = useState<Screen>("start");
   const [currentQ, setCurrentQ] = useState(0);
   const [score, setScore] = useState(0);
@@ -23,6 +27,7 @@ const Index = () => {
   const [wasCorrect, setWasCorrect] = useState(false);
   const [questions, setQuestions] = useState<QuizQuestion[]>(() => pickRandom(quizData, QUIZ_COUNT));
   const { isPlaying, play } = useAudioPlayer();
+  const { unlock, isUnlocked } = useEncyclopedia();
 
   const question: QuizQuestion | undefined = questions[currentQ];
   const totalQuestions = questions.length;
@@ -32,7 +37,17 @@ const Index = () => {
     if (answered) return;
     const correct = answeredPanda === question.isRealPanda;
     setWasCorrect(correct);
-    if (correct) setScore((s) => s + 1);
+    if (correct) {
+      setScore((s) => s + 1);
+      // Unlock encyclopedia entry
+      if (!isUnlocked(question.id)) {
+        unlock(question.id);
+        toast(`${question.emoji} ${question.animalLabel}の図鑑が解放されたパフ！`, {
+          description: "鳴き声図鑑で詳しい解説が読めるよ📖",
+          duration: 3000,
+        });
+      }
+    }
     setAnswered(true);
     setScreen("result");
   };
@@ -61,9 +76,19 @@ const Index = () => {
       navigator.share({ title: "パンダ声クイズ", text });
     } else {
       navigator.clipboard.writeText(text);
-      alert("クリップボードにコピーしました！");
+      toast("クリップボードにコピーしました！");
     }
   };
+
+  const EncyclopediaButton = () => (
+    <button
+      onClick={() => navigate("/encyclopedia")}
+      className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-card border-2 border-primary/30 text-foreground font-bold text-sm shadow-sm hover:scale-105 active:scale-95 transition-transform"
+    >
+      <BookOpen size={16} className="text-primary" />
+      鳴き声図鑑
+    </button>
+  );
 
   // --- START SCREEN ---
   if (screen === "start") {
@@ -82,6 +107,7 @@ const Index = () => {
         >
           クイズ開始 🎶
         </button>
+        <EncyclopediaButton />
       </div>
     );
   }
@@ -159,7 +185,7 @@ const Index = () => {
       <p className="text-muted-foreground">
         {totalQuestions}問中{score}問正解！
       </p>
-      <div className="flex gap-3">
+      <div className="flex gap-3 flex-wrap justify-center">
         <button
           onClick={handleShare}
           className="flex items-center gap-2 px-6 py-3 rounded-full bg-primary text-primary-foreground font-bold shadow-md hover:scale-105 active:scale-95 transition-transform"
@@ -173,6 +199,7 @@ const Index = () => {
           <RotateCcw size={18} /> もう一度
         </button>
       </div>
+      <EncyclopediaButton />
     </div>
   );
 };
