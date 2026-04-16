@@ -52,6 +52,7 @@ const Index = () => {
     setCurrentQ(0);
     setScore(0);
     setAnswered(false);
+    setQuestions(pickRandom(quizData, QUIZ_COUNT));
   };
 
   const handleShare = () => {
