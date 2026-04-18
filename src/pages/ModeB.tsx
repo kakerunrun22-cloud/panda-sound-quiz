@@ -14,18 +14,21 @@ const QUIZ_COUNT = 5;
 interface Pair {
   panda: QuizQuestion;
   fake: QuizQuestion;
-  pandaSide: 0 | 1; // which side panda is on
+  pandaSide: 0 | 1;
 }
 
+/** Build pairs of (panda voice, lookalike fake) using shared pairId. */
 function buildPairs(n: number): Pair[] {
-  const pandas = quizData.filter((q) => q.isRealPanda);
-  const fakes = quizData.filter((q) => !q.isRealPanda);
-  const shuffledPandas = [...pandas].sort(() => Math.random() - 0.5);
-  const shuffledFakes = [...fakes].sort(() => Math.random() - 0.5);
-  const count = Math.min(n, shuffledPandas.length, shuffledFakes.length);
-  return Array.from({ length: count }, (_, i) => ({
-    panda: shuffledPandas[i],
-    fake: shuffledFakes[i],
+  const pandas = quizData.filter((q) => q.type === "panda");
+  const fakeByPair = new Map<string, QuizQuestion>();
+  quizData.filter((q) => q.type === "fake").forEach((q) => fakeByPair.set(q.pairId, q));
+
+  const validPandas = pandas.filter((p) => fakeByPair.has(p.pairId));
+  const shuffled = [...validPandas].sort(() => Math.random() - 0.5).slice(0, n);
+
+  return shuffled.map((panda) => ({
+    panda,
+    fake: fakeByPair.get(panda.pairId)!,
     pandaSide: (Math.random() < 0.5 ? 0 : 1) as 0 | 1,
   }));
 }
@@ -52,6 +55,8 @@ const ModeB = () => {
     if (!pair) return [quizData[0], quizData[1]];
     return pair.pandaSide === 0 ? [pair.panda, pair.fake] : [pair.fake, pair.panda];
   }, [pair]);
+
+  const wrongPicked = pair ? (pair.pandaSide === 0 ? pair.fake : pair.panda) : null;
 
   const handlePlay = (idx: number, url: string) => {
     setActiveIdx(idx);
@@ -155,16 +160,32 @@ const ModeB = () => {
   }
 
   if (screen === "result" && pair) {
+    const reaction =
+      !wasCorrect && wrongPicked?.specialWrongReaction
+        ? wrongPicked.specialWrongReaction
+        : wasCorrect
+          ? "正解パフ！耳が良いパフ〜🎉"
+          : "惜しいパフ…もう一度よく聴いてみるパフ💦";
     return (
       <div className="relative min-h-screen bamboo-pattern flex flex-col items-center px-4 py-6 gap-5">
         <BackButton />
-        <PandaDoctor
-          state={wasCorrect ? "happy" : "sad"}
-          message={wasCorrect ? "正解パフ！耳が良いパフ〜🎉" : "惜しいパフ…もう一度よく聴いてみるパフ💦"}
-        />
+        <PandaDoctor state={wasCorrect ? "happy" : "sad"} message={reaction} />
         <div className={`text-4xl font-black ${wasCorrect ? "text-primary" : "text-destructive"}`}>
           {wasCorrect ? "⭕ 正解！" : "❌ 不正解…"}
         </div>
+
+        {/* Big animal image */}
+        <div className="rounded-3xl bg-card border-2 border-primary/30 p-3 shadow-md">
+          <img
+            src={pair.panda.imageUrl}
+            alt={pair.panda.animalLabel}
+            width={160}
+            height={160}
+            loading="lazy"
+            className="w-32 h-32 object-contain"
+          />
+        </div>
+
         <div className="w-full max-w-sm rounded-2xl bg-card border border-border p-5 shadow-sm">
           <p className="text-xs font-bold text-primary mb-1">
             🎓 正解は「{pair.panda.animalLabel}」

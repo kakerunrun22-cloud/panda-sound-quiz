@@ -79,10 +79,23 @@ const Encyclopedia = () => {
                   : "bg-muted border-border opacity-60 cursor-not-allowed"
                 }`}
             >
-              {/* Emoji / Lock */}
-              <div className="text-4xl">
-                {unlocked ? item.emoji : "❓"}
-              </div>
+              {/* Image / Lock */}
+              {unlocked ? (
+                <div className="w-20 h-20 rounded-xl bg-secondary/40 border border-border p-1 flex items-center justify-center">
+                  <img
+                    src={item.imageUrl}
+                    alt={item.animalLabel}
+                    width={80}
+                    height={80}
+                    loading="lazy"
+                    className="w-full h-full object-contain"
+                  />
+                </div>
+              ) : (
+                <div className="w-20 h-20 rounded-xl bg-muted flex items-center justify-center text-4xl">
+                  ❓
+                </div>
+              )}
               {!unlocked && (
                 <div className="absolute top-2 right-2">
                   <Lock size={16} className="text-muted-foreground" />
@@ -112,6 +125,19 @@ const Encyclopedia = () => {
 
           {selected && (
             <div className="flex flex-col gap-4">
+              {/* Animal image */}
+              <div className="flex justify-center">
+                <div className="w-40 h-40 rounded-2xl bg-secondary/40 border-2 border-primary/20 p-2 shadow-inner">
+                  <img
+                    src={selected.imageUrl}
+                    alt={selected.animalLabel}
+                    width={160}
+                    height={160}
+                    loading="lazy"
+                    className="w-full h-full object-contain"
+                  />
+                </div>
+              </div>
               {/* Audio replay */}
               <button
                 onClick={() => play(selected.audioUrl)}
