@@ -14,6 +14,7 @@ interface Card {
   flipped: boolean;
 }
 
+type Difficulty = "easy" | "hard";
 const PAIR_COUNT = 6; // 6 pairs = 12 cards (4x3)
 
 function buildDeck(): Card[] {
@@ -27,6 +28,7 @@ function buildDeck(): Card[] {
 
 const Memory = () => {
   const navigate = useNavigate();
+  const [difficulty, setDifficulty] = useState<Difficulty | null>(null);
   const [deck, setDeck] = useState<Card[]>(() => buildDeck());
   const [selected, setSelected] = useState<number[]>([]);
   const [misses, setMisses] = useState(0);
@@ -97,7 +99,8 @@ const Memory = () => {
     }
   };
 
-  const handleRestart = () => {
+  const startGame = (d: Difficulty) => {
+    setDifficulty(d);
     setDeck(buildDeck());
     setSelected([]);
     setMisses(0);
@@ -107,21 +110,79 @@ const Memory = () => {
     recordedRef.current = false;
   };
 
+  const handleRestart = () => {
+    if (difficulty) startGame(difficulty);
+  };
+
   const fmtTime = (s: number) => {
     const m = Math.floor(s / 60);
     const sec = s % 60;
     return `${String(m).padStart(2, "0")}:${String(sec).padStart(2, "0")}`;
   };
 
+  const BackButton = () => (
+    <button
+      onClick={() => navigate("/")}
+      className="absolute top-4 left-4 p-2 rounded-full bg-card border border-border shadow-sm hover:scale-105 active:scale-95 transition-transform z-10"
+      aria-label="メニューへ"
+    >
+      <ArrowLeft size={20} className="text-foreground" />
+    </button>
+  );
+
+  // Difficulty selection screen
+  if (!difficulty) {
+    return (
+      <div className="relative min-h-screen bamboo-pattern px-4 py-6 flex flex-col items-center">
+        <BackButton />
+        <div className="max-w-md mx-auto flex flex-col items-center gap-5 pt-10 w-full">
+          <PandaDoctor state="neutral" message="難易度を選んでね！絵文字ありで楽しむか、音だけで挑戦するかパフ🎴" />
+          <h2 className="text-xl font-black text-foreground mt-2">難易度を選択</h2>
+
+          <button
+            onClick={() => startGame("easy")}
+            className="w-full flex items-center gap-4 p-5 rounded-2xl bg-card border-2 border-primary/30 shadow-md hover:scale-[1.02] active:scale-[0.98] transition-transform text-left"
+          >
+            <div className="flex-shrink-0 w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center text-3xl">
+              🐼
+            </div>
+            <div className="flex-1">
+              <div className="font-black text-foreground text-base mb-0.5">初級（絵文字あり）</div>
+              <p className="text-xs text-muted-foreground leading-snug">
+                カードに動物の絵文字が表示されるよ。視覚と音のヒントで楽しくプレイ！
+              </p>
+            </div>
+          </button>
+
+          <button
+            onClick={() => startGame("hard")}
+            className="w-full flex items-center gap-4 p-5 rounded-2xl bg-card border-2 border-foreground/40 shadow-md hover:scale-[1.02] active:scale-[0.98] transition-transform text-left"
+          >
+            <div className="flex-shrink-0 w-14 h-14 rounded-2xl bg-foreground flex items-center justify-center text-3xl">
+              🐾
+            </div>
+            <div className="flex-1">
+              <div className="font-black text-foreground text-base mb-0.5">上級（絵文字なし）</div>
+              <p className="text-xs text-muted-foreground leading-snug">
+                カードは音だけ！耳の記憶力で勝負するストイックモードパフ。
+              </p>
+            </div>
+          </button>
+
+          {stats.memory.bestTimeSec !== null && (
+            <div className="text-xs text-muted-foreground flex items-center gap-1 mt-2">
+              <Trophy size={12} className="text-primary" />
+              ベスト：{fmtTime(stats.memory.bestTimeSec)} / ミス{stats.memory.bestMisses}
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="relative min-h-screen bamboo-pattern px-4 py-6">
-      <button
-        onClick={() => navigate("/")}
-        className="absolute top-4 left-4 p-2 rounded-full bg-card border border-border shadow-sm hover:scale-105 active:scale-95 transition-transform z-10"
-        aria-label="メニューへ"
-      >
-        <ArrowLeft size={20} className="text-foreground" />
-      </button>
+      <BackButton />
 
       <div className="max-w-md mx-auto flex flex-col items-center gap-4 pt-10">
         <PandaDoctor
@@ -129,7 +190,9 @@ const Memory = () => {
           message={
             cleared
               ? "コンプリートパフ！博士もびっくりパフ🎊"
-              : "同じ音のカードを2枚めくってペアにするパフ🧠"
+              : difficulty === "hard"
+                ? "音だけが頼りパフ🎧 集中するパフ！"
+                : "同じ音のカードを2枚めくってペアにするパフ🧠"
           }
         />
 
@@ -151,13 +214,10 @@ const Memory = () => {
           </div>
         </div>
 
-        {/* Best record */}
-        {stats.memory.bestTimeSec !== null && (
-          <div className="text-xs text-muted-foreground flex items-center gap-1">
-            <Trophy size={12} className="text-primary" />
-            ベスト：{fmtTime(stats.memory.bestTimeSec)} / ミス{stats.memory.bestMisses}
-          </div>
-        )}
+        {/* Difficulty badge */}
+        <div className="text-[10px] font-bold text-muted-foreground">
+          モード：{difficulty === "easy" ? "🐼 初級（絵文字あり）" : "🐾 上級（音のみ）"}
+        </div>
 
         {/* Grid 4x3 */}
         <div className="grid grid-cols-4 gap-2 w-full">
@@ -178,8 +238,12 @@ const Memory = () => {
               >
                 {showFace ? (
                   <div className="flex flex-col items-center gap-0.5">
-                    <span className="text-2xl">{card.question.emoji}</span>
-                    <Volume2 size={12} className="text-primary" />
+                    {difficulty === "easy" ? (
+                      <span className="text-2xl">{card.question.emoji}</span>
+                    ) : (
+                      <Volume2 size={20} className="text-primary" />
+                    )}
+                    {difficulty === "easy" && <Volume2 size={12} className="text-primary" />}
                   </div>
                 ) : (
                   <span className="text-2xl text-background">🐾</span>
@@ -199,12 +263,20 @@ const Memory = () => {
           </div>
         )}
 
-        <button
-          onClick={handleRestart}
-          className="flex items-center gap-2 px-6 py-3 rounded-full bg-primary text-primary-foreground font-bold shadow-md hover:scale-105 active:scale-95 transition-transform"
-        >
-          <RotateCcw size={18} /> 新しいゲーム
-        </button>
+        <div className="flex gap-2 flex-wrap justify-center">
+          <button
+            onClick={handleRestart}
+            className="flex items-center gap-2 px-6 py-3 rounded-full bg-primary text-primary-foreground font-bold shadow-md hover:scale-105 active:scale-95 transition-transform"
+          >
+            <RotateCcw size={18} /> 新しいゲーム
+          </button>
+          <button
+            onClick={() => setDifficulty(null)}
+            className="px-5 py-3 rounded-full bg-card border-2 border-border text-foreground font-bold text-sm shadow-sm hover:scale-105 active:scale-95 transition-transform"
+          >
+            難易度変更
+          </button>
+        </div>
       </div>
     </div>
   );

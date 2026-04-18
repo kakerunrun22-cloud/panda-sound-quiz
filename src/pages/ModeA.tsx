@@ -114,18 +114,34 @@ const ModeA = () => {
   }
 
   if (screen === "result" && question) {
+    const reaction =
+      !wasCorrect && question.specialWrongReaction
+        ? question.specialWrongReaction
+        : wasCorrect
+          ? "正解パフ！すごいパフ〜🎉"
+          : "残念パフ…次はがんばるパフ💦";
     return (
       <div className="relative min-h-screen bamboo-pattern flex flex-col items-center px-4 py-6 gap-5">
         <BackButton />
-        <PandaDoctor
-          state={wasCorrect ? "happy" : "sad"}
-          message={wasCorrect ? "正解パフ！すごいパフ〜🎉" : "残念パフ…次はがんばるパフ💦"}
-        />
+        <PandaDoctor state={wasCorrect ? "happy" : "sad"} message={reaction} />
         <div className={`text-4xl font-black ${wasCorrect ? "text-primary" : "text-destructive"}`}>
           {wasCorrect ? "⭕ 正解！" : "❌ 不正解…"}
         </div>
+        {/* Big animal image */}
+        <div className="rounded-3xl bg-card border-2 border-primary/30 p-3 shadow-md">
+          <img
+            src={question.imageUrl}
+            alt={question.animalLabel}
+            width={160}
+            height={160}
+            loading="lazy"
+            className="w-32 h-32 object-contain"
+          />
+        </div>
         <div className="w-full max-w-sm rounded-2xl bg-card border border-border p-5 shadow-sm">
-          <p className="text-xs font-bold text-primary mb-1">🎓 パンダ博士の解説</p>
+          <p className="text-xs font-bold text-primary mb-1">
+            🎓 正解は「{question.animalLabel}」
+          </p>
           <p className="text-sm text-foreground leading-relaxed">{question.explanation}</p>
         </div>
         <button
