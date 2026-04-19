@@ -251,9 +251,9 @@ const Memory = () => {
                       <Volume2 size={12} className="text-primary" />
                     </div>
                   ) : (
-                    // Hard mode: clean音符アイコン (no emoji hint)
-                    <div className="w-9 h-9 rounded-full bg-primary/15 flex items-center justify-center">
-                      <Music size={20} className="text-primary" strokeWidth={2.5} />
+                    // Hard mode: simple "?" mark — sound-only memory
+                    <div className="w-9 h-9 rounded-full bg-primary flex items-center justify-center">
+                      <span className="text-background font-black text-xl leading-none">?</span>
                     </div>
                   )
                 ) : (
