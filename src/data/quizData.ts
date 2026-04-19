@@ -19,6 +19,7 @@ import puppyPhoto from "@/assets/photos/puppy-real.jpg";
 import horsePhoto from "@/assets/photos/horse-real.jpg";
 import birdPhoto from "@/assets/photos/bird-real.jpg";
 import ojisanPhoto from "@/assets/photos/ojisan-real.jpg";
+import kittenPhoto from "@/assets/photos/kitten-real.jpg";
 
 export interface QuizQuestion {
   id: number;
@@ -249,6 +250,7 @@ export const quizData: QuizQuestion[] = [
     animalLabel: "子猫",
     emoji: "🐱",
     imageUrl: kittenImg,
+    detailImageUrl: kittenPhoto,
     pairId: "kitten",
     type: "fake",
     explanation:
