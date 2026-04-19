@@ -10,6 +10,16 @@ import birdImg from "@/assets/animals/bird.png";
 import kittenImg from "@/assets/animals/kitten.png";
 import ojisanImg from "@/assets/animals/ojisan.png";
 
+// Real photographs for encyclopedia detail view
+import pandaPhoto from "@/assets/photos/panda-real.jpg";
+import goatPhoto from "@/assets/photos/goat-real.jpg";
+import sealionPhoto from "@/assets/photos/sealion-real.jpg";
+import dogPhoto from "@/assets/photos/dog-real.jpg";
+import puppyPhoto from "@/assets/photos/puppy-real.jpg";
+import horsePhoto from "@/assets/photos/horse-real.jpg";
+import birdPhoto from "@/assets/photos/bird-real.jpg";
+import ojisanPhoto from "@/assets/photos/ojisan-real.jpg";
+
 export interface QuizQuestion {
   id: number;
   audioUrl: string;
@@ -19,6 +29,8 @@ export interface QuizQuestion {
   longDescription: string;
   emoji: string;
   imageUrl: string;
+  /** Real photograph for the encyclopedia detail view (optional). */
+  detailImageUrl?: string;
   /** Identifier shared between a panda voice and its lookalike animal (for ModeB pairing) */
   pairId: string;
   /** "panda" voice or the "fake" lookalike animal */
@@ -36,6 +48,7 @@ export const quizData: QuizQuestion[] = [
     animalLabel: "パンダ（ヤギ声）",
     emoji: "🐼",
     imageUrl: pandaImg,
+    detailImageUrl: pandaPhoto,
     pairId: "goat",
     type: "panda",
     explanation:
@@ -50,6 +63,7 @@ export const quizData: QuizQuestion[] = [
     animalLabel: "ヤギ",
     emoji: "🐐",
     imageUrl: goatImg,
+    detailImageUrl: goatPhoto,
     pairId: "goat",
     type: "fake",
     explanation:
@@ -65,6 +79,7 @@ export const quizData: QuizQuestion[] = [
     animalLabel: "パンダ（オットセイ声）",
     emoji: "🐼",
     imageUrl: pandaShoutImg,
+    detailImageUrl: pandaPhoto,
     pairId: "sealion",
     type: "panda",
     explanation:
@@ -79,6 +94,7 @@ export const quizData: QuizQuestion[] = [
     animalLabel: "オットセイ",
     emoji: "🦭",
     imageUrl: sealionImg,
+    detailImageUrl: sealionPhoto,
     pairId: "sealion",
     type: "fake",
     explanation:
@@ -94,6 +110,7 @@ export const quizData: QuizQuestion[] = [
     animalLabel: "パンダ（犬声）",
     emoji: "🐼",
     imageUrl: pandaShoutImg,
+    detailImageUrl: pandaPhoto,
     pairId: "dog",
     type: "panda",
     explanation:
@@ -108,6 +125,7 @@ export const quizData: QuizQuestion[] = [
     animalLabel: "犬",
     emoji: "🐕",
     imageUrl: dogImg,
+    detailImageUrl: dogPhoto,
     pairId: "dog",
     type: "fake",
     explanation:
@@ -123,6 +141,7 @@ export const quizData: QuizQuestion[] = [
     animalLabel: "パンダ（子犬声）",
     emoji: "🐼",
     imageUrl: babyPandaImg,
+    detailImageUrl: pandaPhoto,
     pairId: "puppy",
     type: "panda",
     explanation:
@@ -137,6 +156,7 @@ export const quizData: QuizQuestion[] = [
     animalLabel: "子犬",
     emoji: "🐶",
     imageUrl: puppyImg,
+    detailImageUrl: puppyPhoto,
     pairId: "puppy",
     type: "fake",
     explanation:
@@ -152,6 +172,7 @@ export const quizData: QuizQuestion[] = [
     animalLabel: "パンダ（馬声）",
     emoji: "🐼",
     imageUrl: pandaShoutImg,
+    detailImageUrl: pandaPhoto,
     pairId: "horse",
     type: "panda",
     explanation:
@@ -166,6 +187,7 @@ export const quizData: QuizQuestion[] = [
     animalLabel: "馬",
     emoji: "🐴",
     imageUrl: horseImg,
+    detailImageUrl: horsePhoto,
     pairId: "horse",
     type: "fake",
     explanation:
@@ -181,6 +203,7 @@ export const quizData: QuizQuestion[] = [
     animalLabel: "パンダ（小鳥声）",
     emoji: "🐼",
     imageUrl: pandaImg,
+    detailImageUrl: pandaPhoto,
     pairId: "bird",
     type: "panda",
     explanation:
@@ -195,6 +218,7 @@ export const quizData: QuizQuestion[] = [
     animalLabel: "小鳥",
     emoji: "🐦",
     imageUrl: birdImg,
+    detailImageUrl: birdPhoto,
     pairId: "bird",
     type: "fake",
     explanation:
@@ -210,6 +234,7 @@ export const quizData: QuizQuestion[] = [
     animalLabel: "子パンダ（子猫声）",
     emoji: "🐼",
     imageUrl: babyPandaImg,
+    detailImageUrl: pandaPhoto,
     pairId: "kitten",
     type: "panda",
     explanation:
@@ -239,6 +264,7 @@ export const quizData: QuizQuestion[] = [
     animalLabel: "パンダ（おじさん声）",
     emoji: "🐼",
     imageUrl: pandaShoutImg,
+    detailImageUrl: pandaPhoto,
     pairId: "ojisan",
     type: "panda",
     explanation:
@@ -253,6 +279,7 @@ export const quizData: QuizQuestion[] = [
     animalLabel: "おじさん",
     emoji: "🧔",
     imageUrl: ojisanImg,
+    detailImageUrl: ojisanPhoto,
     pairId: "ojisan",
     type: "fake",
     specialWrongReaction: "それはただの人間パフ！おじさんに騙されちゃダメパフ〜😂",
