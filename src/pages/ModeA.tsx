@@ -119,14 +119,14 @@ const ModeA = () => {
           {wasCorrect ? "⭕ 正解！" : "❌ 不正解…"}
         </div>
         {/* Big animal image */}
-        <div className="rounded-3xl bg-card border-2 border-primary/30 p-3 shadow-md">
+        <div className="rounded-3xl bg-card border-2 border-primary/30 p-2 shadow-md overflow-hidden">
           <img
-            src={question.imageUrl}
+            src={question.detailImageUrl ?? question.imageUrl}
             alt={question.animalLabel}
             width={160}
             height={160}
             loading="lazy"
-            className="w-32 h-32 object-contain"
+            className="w-32 h-32 object-cover rounded-2xl"
           />
         </div>
         <div className="w-full max-w-sm rounded-2xl bg-card border border-border p-5 shadow-sm">

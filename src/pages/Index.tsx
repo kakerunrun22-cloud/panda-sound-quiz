@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { HelpCircle, Scale, Brain, BookOpen, BarChart3 } from "lucide-react";
+import { HelpCircle, Scale, Spade, BookOpen, BarChart3 } from "lucide-react";
 import PandaDoctor from "@/components/PandaDoctor";
 import MenuCard from "@/components/MenuCard";
 
@@ -33,8 +33,8 @@ const Index = () => {
           onClick={() => navigate("/mode-b")}
         />
         <MenuCard
-          icon={Brain}
-          emoji="🧠"
+          icon={Spade}
+          emoji="♠"
           title="モードC：音の神経衰弱"
           subtitle="同じ音のペアを見つけよう"
           onClick={() => navigate("/memory")}
