@@ -125,16 +125,16 @@ const Encyclopedia = () => {
 
           {selected && (
             <div className="flex flex-col gap-4">
-              {/* Animal image */}
+              {/* Animal photo (real-life image) */}
               <div className="flex justify-center">
-                <div className="w-40 h-40 rounded-2xl bg-secondary/40 border-2 border-primary/20 p-2 shadow-inner">
+                <div className="w-56 h-56 rounded-2xl bg-secondary/40 border-2 border-primary/20 p-1.5 shadow-inner overflow-hidden">
                   <img
-                    src={selected.imageUrl}
+                    src={selected.detailImageUrl ?? selected.imageUrl}
                     alt={selected.animalLabel}
-                    width={160}
-                    height={160}
+                    width={224}
+                    height={224}
                     loading="lazy"
-                    className="w-full h-full object-contain"
+                    className="w-full h-full object-cover rounded-xl"
                   />
                 </div>
               </div>
