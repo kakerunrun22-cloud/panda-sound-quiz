@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { ArrowLeft, Share2, RotateCcw, BookOpen, Volume2 } from "lucide-react";
+import { ArrowLeft, RotateCcw, BookOpen, Volume2 } from "lucide-react";
 import PandaDoctor from "@/components/PandaDoctor";
 import ProgressBar from "@/components/ProgressBar";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
@@ -97,15 +97,6 @@ const ModeB = () => {
     setScore(0);
     setPairs(buildPairs(QUIZ_COUNT));
     setScreen("quiz");
-  };
-
-  const handleShare = () => {
-    const text = `🐼 パンダクイズ（モードB：聴き比べ）で私のパンダ理解度は${scorePercent}%でした！`;
-    if (navigator.share) navigator.share({ title: "パンダ声クイズ", text });
-    else {
-      navigator.clipboard.writeText(text);
-      toast("クリップボードにコピーしました！");
-    }
   };
 
   const BackButton = () => (
@@ -219,12 +210,6 @@ const ModeB = () => {
       <div className="text-6xl font-black text-primary">{scorePercent}%</div>
       <p className="text-muted-foreground">{total}問中{score}問正解！</p>
       <div className="flex gap-3 flex-wrap justify-center">
-        <button
-          onClick={handleShare}
-          className="flex items-center gap-2 px-6 py-3 rounded-full bg-primary text-primary-foreground font-bold shadow-md hover:scale-105 active:scale-95 transition-transform"
-        >
-          <Share2 size={18} /> シェア
-        </button>
         <button
           onClick={handleRestart}
           className="flex items-center gap-2 px-6 py-3 rounded-full bg-secondary text-secondary-foreground font-bold shadow-md hover:scale-105 active:scale-95 transition-transform"

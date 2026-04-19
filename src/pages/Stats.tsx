@@ -109,24 +109,47 @@ const Stats = () => {
           </div>
         </StatCard>
 
-        <StatCard title="モードC：神経衰弱" emoji="🧠">
+        <StatCard title="モードC：神経衰弱（初級 🐼）" emoji="🧠">
           <div className="grid grid-cols-3 gap-2 text-center">
             <div>
               <div className="text-[10px] text-muted-foreground font-bold">プレイ回数</div>
-              <div className="text-xl font-black text-foreground">{stats.memory.plays}</div>
+              <div className="text-xl font-black text-foreground">{stats.memoryEasy.plays}</div>
             </div>
             <div>
               <div className="text-[10px] text-muted-foreground font-bold flex items-center justify-center gap-0.5">
                 <Trophy size={10} /> ベストタイム
               </div>
               <div className="text-xl font-black text-primary tabular-nums">
-                {fmtTime(stats.memory.bestTimeSec)}
+                {fmtTime(stats.memoryEasy.bestTimeSec)}
               </div>
             </div>
             <div>
               <div className="text-[10px] text-muted-foreground font-bold">最少ミス</div>
               <div className="text-xl font-black text-primary">
-                {stats.memory.bestMisses ?? "—"}
+                {stats.memoryEasy.bestMisses ?? "—"}
+              </div>
+            </div>
+          </div>
+        </StatCard>
+
+        <StatCard title="モードC：神経衰弱（上級 🎧）" emoji="🎧">
+          <div className="grid grid-cols-3 gap-2 text-center">
+            <div>
+              <div className="text-[10px] text-muted-foreground font-bold">プレイ回数</div>
+              <div className="text-xl font-black text-foreground">{stats.memoryHard.plays}</div>
+            </div>
+            <div>
+              <div className="text-[10px] text-muted-foreground font-bold flex items-center justify-center gap-0.5">
+                <Trophy size={10} /> ベストタイム
+              </div>
+              <div className="text-xl font-black text-foreground tabular-nums">
+                {fmtTime(stats.memoryHard.bestTimeSec)}
+              </div>
+            </div>
+            <div>
+              <div className="text-[10px] text-muted-foreground font-bold">最少ミス</div>
+              <div className="text-xl font-black text-foreground">
+                {stats.memoryHard.bestMisses ?? "—"}
               </div>
             </div>
           </div>
