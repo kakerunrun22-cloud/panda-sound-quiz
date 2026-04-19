@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { ArrowLeft, RotateCcw, Volume2, Trophy } from "lucide-react";
+import { ArrowLeft, RotateCcw, Volume2, Trophy, Music } from "lucide-react";
 import PandaDoctor from "@/components/PandaDoctor";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { useStats } from "@/hooks/useStats";
@@ -25,6 +25,13 @@ function buildDeck(): Card[] {
   ]);
   return cards.sort(() => Math.random() - 0.5);
 }
+
+const fmtTime = (s: number | null) => {
+  if (s === null) return "—";
+  const m = Math.floor(s / 60);
+  const sec = s % 60;
+  return `${String(m).padStart(2, "0")}:${String(sec).padStart(2, "0")}`;
+};
 
 const Memory = () => {
   const navigate = useNavigate();
@@ -52,14 +59,14 @@ const Memory = () => {
 
   // Detect clear
   useEffect(() => {
-    if (matchedCount === totalCards && startedAt && !recordedRef.current) {
+    if (matchedCount === totalCards && startedAt && !recordedRef.current && difficulty) {
       recordedRef.current = true;
       const timeSec = Math.round((Date.now() - startedAt) / 1000);
       setCleared(true);
-      recordMemory(timeSec, misses);
+      recordMemory(difficulty, timeSec, misses);
       toast("🎉 クリアパフ！すごいパフ〜");
     }
-  }, [matchedCount, totalCards, startedAt, misses, recordMemory]);
+  }, [matchedCount, totalCards, startedAt, misses, recordMemory, difficulty]);
 
   const elapsed = useMemo(() => {
     if (!startedAt) return 0;
@@ -114,12 +121,6 @@ const Memory = () => {
     if (difficulty) startGame(difficulty);
   };
 
-  const fmtTime = (s: number) => {
-    const m = Math.floor(s / 60);
-    const sec = s % 60;
-    return `${String(m).padStart(2, "0")}:${String(sec).padStart(2, "0")}`;
-  };
-
   const BackButton = () => (
     <button
       onClick={() => navigate("/")}
@@ -129,6 +130,9 @@ const Memory = () => {
       <ArrowLeft size={20} className="text-foreground" />
     </button>
   );
+
+  const easyBest = stats.memoryEasy;
+  const hardBest = stats.memoryHard;
 
   // Difficulty selection screen
   if (!difficulty) {
@@ -148,9 +152,13 @@ const Memory = () => {
             </div>
             <div className="flex-1">
               <div className="font-black text-foreground text-base mb-0.5">初級（絵文字あり）</div>
-              <p className="text-xs text-muted-foreground leading-snug">
+              <p className="text-xs text-muted-foreground leading-snug mb-1">
                 カードに動物の絵文字が表示されるよ。視覚と音のヒントで楽しくプレイ！
               </p>
+              <div className="flex items-center gap-2 text-[10px] font-bold text-primary">
+                <Trophy size={11} />
+                ベスト：{fmtTime(easyBest.bestTimeSec)} / ミス{easyBest.bestMisses ?? "—"}
+              </div>
             </div>
           </button>
 
@@ -158,23 +166,20 @@ const Memory = () => {
             onClick={() => startGame("hard")}
             className="w-full flex items-center gap-4 p-5 rounded-2xl bg-card border-2 border-foreground/40 shadow-md hover:scale-[1.02] active:scale-[0.98] transition-transform text-left"
           >
-            <div className="flex-shrink-0 w-14 h-14 rounded-2xl bg-foreground flex items-center justify-center text-3xl">
-              🐾
+            <div className="flex-shrink-0 w-14 h-14 rounded-2xl bg-foreground flex items-center justify-center">
+              <Music size={26} className="text-background" />
             </div>
             <div className="flex-1">
               <div className="font-black text-foreground text-base mb-0.5">上級（絵文字なし）</div>
-              <p className="text-xs text-muted-foreground leading-snug">
+              <p className="text-xs text-muted-foreground leading-snug mb-1">
                 カードは音だけ！耳の記憶力で勝負するストイックモードパフ。
               </p>
+              <div className="flex items-center gap-2 text-[10px] font-bold text-foreground">
+                <Trophy size={11} />
+                ベスト：{fmtTime(hardBest.bestTimeSec)} / ミス{hardBest.bestMisses ?? "—"}
+              </div>
             </div>
           </button>
-
-          {stats.memory.bestTimeSec !== null && (
-            <div className="text-xs text-muted-foreground flex items-center gap-1 mt-2">
-              <Trophy size={12} className="text-primary" />
-              ベスト：{fmtTime(stats.memory.bestTimeSec)} / ミス{stats.memory.bestMisses}
-            </div>
-          )}
         </div>
       </div>
     );
@@ -216,13 +221,14 @@ const Memory = () => {
 
         {/* Difficulty badge */}
         <div className="text-[10px] font-bold text-muted-foreground">
-          モード：{difficulty === "easy" ? "🐼 初級（絵文字あり）" : "🐾 上級（音のみ）"}
+          モード：{difficulty === "easy" ? "🐼 初級（絵文字あり）" : "🎧 上級（音のみ）"}
         </div>
 
         {/* Grid 4x3 */}
         <div className="grid grid-cols-4 gap-2 w-full">
           {deck.map((card, idx) => {
             const showFace = card.flipped || card.matched;
+            const isSelected = selected.includes(idx) && !card.matched;
             return (
               <button
                 key={card.uid}
@@ -232,21 +238,27 @@ const Memory = () => {
                   card.matched
                     ? "bg-primary/10 border-primary/40 opacity-60"
                     : showFace
-                      ? "bg-card border-primary shadow-md"
-                      : "bg-foreground border-foreground hover:scale-105 active:scale-95 shadow"
+                      ? "bg-card border-primary shadow-md scale-[1.03]"
+                      : isSelected
+                        ? "bg-primary/20 border-primary shadow-md"
+                        : "bg-foreground border-foreground hover:scale-105 active:scale-95 shadow"
                 }`}
               >
                 {showFace ? (
-                  <div className="flex flex-col items-center gap-0.5">
-                    {difficulty === "easy" ? (
-                      <span className="text-2xl">{card.question.emoji}</span>
-                    ) : (
-                      <Volume2 size={20} className="text-primary" />
-                    )}
-                    {difficulty === "easy" && <Volume2 size={12} className="text-primary" />}
-                  </div>
+                  difficulty === "easy" ? (
+                    <div className="flex flex-col items-center gap-0.5">
+                      <span className="text-2xl leading-none">{card.question.emoji}</span>
+                      <Volume2 size={12} className="text-primary" />
+                    </div>
+                  ) : (
+                    // Hard mode: clean音符アイコン (no emoji hint)
+                    <div className="w-9 h-9 rounded-full bg-primary/15 flex items-center justify-center">
+                      <Music size={20} className="text-primary" strokeWidth={2.5} />
+                    </div>
+                  )
                 ) : (
-                  <span className="text-2xl text-background">🐾</span>
+                  // Card back: minimalist paw
+                  <span className="text-xl text-background opacity-80">🐾</span>
                 )}
               </button>
             );
@@ -259,6 +271,13 @@ const Memory = () => {
             <p className="text-sm text-foreground">
               タイム：<span className="font-bold">{fmtTime(elapsed)}</span> / ミス：
               <span className="font-bold text-destructive">{misses}</span>
+            </p>
+            <p className="text-[11px] text-muted-foreground mt-2">
+              {difficulty === "easy" ? "🐼 初級" : "🎧 上級"} ベスト：
+              {fmtTime(
+                (difficulty === "easy" ? easyBest : hardBest).bestTimeSec
+              )} / ミス
+              {(difficulty === "easy" ? easyBest : hardBest).bestMisses ?? "—"}
             </p>
           </div>
         )}
