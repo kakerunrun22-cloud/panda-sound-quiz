@@ -109,7 +109,7 @@ const Stats = () => {
           </div>
         </StatCard>
 
-        <StatCard title="モードC：神経衰弱（初級 🐼）" emoji="🧠">
+        <StatCard title="モードC：神経衰弱（初級）" emoji="♠">
           <div className="grid grid-cols-3 gap-2 text-center">
             <div>
               <div className="text-[10px] text-muted-foreground font-bold">プレイ回数</div>
@@ -132,7 +132,7 @@ const Stats = () => {
           </div>
         </StatCard>
 
-        <StatCard title="モードC：神経衰弱（上級 🎧）" emoji="🎧">
+        <StatCard title="モードC：神経衰弱（上級）" emoji="♠">
           <div className="grid grid-cols-3 gap-2 text-center">
             <div>
               <div className="text-[10px] text-muted-foreground font-bold">プレイ回数</div>
