@@ -10,6 +10,16 @@ import birdImg from "@/assets/animals/bird.png";
 import kittenImg from "@/assets/animals/kitten.png";
 import ojisanImg from "@/assets/animals/ojisan.png";
 
+// Real photographs for encyclopedia detail view
+import pandaPhoto from "@/assets/photos/panda-real.jpg";
+import goatPhoto from "@/assets/photos/goat-real.jpg";
+import sealionPhoto from "@/assets/photos/sealion-real.jpg";
+import dogPhoto from "@/assets/photos/dog-real.jpg";
+import puppyPhoto from "@/assets/photos/puppy-real.jpg";
+import horsePhoto from "@/assets/photos/horse-real.jpg";
+import birdPhoto from "@/assets/photos/bird-real.jpg";
+import ojisanPhoto from "@/assets/photos/ojisan-real.jpg";
+
 export interface QuizQuestion {
   id: number;
   audioUrl: string;
@@ -19,6 +29,8 @@ export interface QuizQuestion {
   longDescription: string;
   emoji: string;
   imageUrl: string;
+  /** Real photograph for the encyclopedia detail view (optional). */
+  detailImageUrl?: string;
   /** Identifier shared between a panda voice and its lookalike animal (for ModeB pairing) */
   pairId: string;
   /** "panda" voice or the "fake" lookalike animal */
