@@ -81,14 +81,14 @@ const Encyclopedia = () => {
             >
               {/* Image / Lock */}
               {unlocked ? (
-                <div className="w-20 h-20 rounded-xl bg-secondary/40 border border-border p-1 flex items-center justify-center">
+                <div className="w-20 h-20 rounded-xl bg-secondary/40 border border-border overflow-hidden flex items-center justify-center">
                   <img
-                    src={item.imageUrl}
+                    src={item.detailImageUrl ?? item.imageUrl}
                     alt={item.animalLabel}
                     width={80}
                     height={80}
                     loading="lazy"
-                    className="w-full h-full object-contain"
+                    className="w-full h-full object-cover"
                   />
                 </div>
               ) : (
