@@ -120,7 +120,23 @@ const Memory = () => {
     setLocked(false);
     setStartedAt(null);
     setCleared(false);
+    setSubmitted(false);
+    setClearTime(null);
     recordedRef.current = false;
+  };
+
+  const handleSubmitRanking = async () => {
+    if (clearTime === null || !difficulty) return;
+    setSubmitting(true);
+    try {
+      await submitRanking(nickname, difficulty, clearTime, misses);
+      setSubmitted(true);
+      toast("🏆 ランキングに登録したパフ！");
+    } catch (e) {
+      toast("登録に失敗したパフ…もう一度試してパフ");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const handleRestart = () => {
