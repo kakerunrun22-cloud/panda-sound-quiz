@@ -44,6 +44,10 @@ const Memory = () => {
   const [startedAt, setStartedAt] = useState<number | null>(null);
   const [now, setNow] = useState(Date.now());
   const [cleared, setCleared] = useState(false);
+  const [nickname, setNickname] = useState(() => getSavedNickname());
+  const [submitting, setSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [clearTime, setClearTime] = useState<number | null>(null);
   const recordedRef = useRef(false);
   const { play } = useAudioPlayer();
   const { stats, recordMemory } = useStats();
