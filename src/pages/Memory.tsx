@@ -67,6 +67,7 @@ const Memory = () => {
     if (matchedCount === totalCards && startedAt && !recordedRef.current && difficulty) {
       recordedRef.current = true;
       const timeSec = Math.round((Date.now() - startedAt) / 1000);
+      setClearTime(timeSec);
       setCleared(true);
       recordMemory(difficulty, timeSec, misses);
       toast("🎉 クリアパフ！すごいパフ〜");
