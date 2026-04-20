@@ -1,10 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { ArrowLeft, RotateCcw, Volume2, Trophy, Music } from "lucide-react";
+import { ArrowLeft, RotateCcw, Volume2, Trophy, Music, Send } from "lucide-react";
 import PandaDoctor from "@/components/PandaDoctor";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { useStats } from "@/hooks/useStats";
+import { getSavedNickname, submitRanking } from "@/hooks/useRanking";
 import { quizData, type QuizQuestion } from "@/data/quizData";
 
 interface Card {
@@ -43,6 +44,10 @@ const Memory = () => {
   const [startedAt, setStartedAt] = useState<number | null>(null);
   const [now, setNow] = useState(Date.now());
   const [cleared, setCleared] = useState(false);
+  const [nickname, setNickname] = useState(() => getSavedNickname());
+  const [submitting, setSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [clearTime, setClearTime] = useState<number | null>(null);
   const recordedRef = useRef(false);
   const { play } = useAudioPlayer();
   const { stats, recordMemory } = useStats();
@@ -62,6 +67,7 @@ const Memory = () => {
     if (matchedCount === totalCards && startedAt && !recordedRef.current && difficulty) {
       recordedRef.current = true;
       const timeSec = Math.round((Date.now() - startedAt) / 1000);
+      setClearTime(timeSec);
       setCleared(true);
       recordMemory(difficulty, timeSec, misses);
       toast("🎉 クリアパフ！すごいパフ〜");
@@ -114,7 +120,23 @@ const Memory = () => {
     setLocked(false);
     setStartedAt(null);
     setCleared(false);
+    setSubmitted(false);
+    setClearTime(null);
     recordedRef.current = false;
+  };
+
+  const handleSubmitRanking = async () => {
+    if (clearTime === null || !difficulty) return;
+    setSubmitting(true);
+    try {
+      await submitRanking(nickname, difficulty, clearTime, misses);
+      setSubmitted(true);
+      toast("🏆 ランキングに登録したパフ！");
+    } catch (e) {
+      toast("登録に失敗したパフ…もう一度試してパフ");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const handleRestart = () => {
@@ -279,6 +301,47 @@ const Memory = () => {
               )} / ミス
               {(difficulty === "easy" ? easyBest : hardBest).bestMisses ?? "—"}
             </p>
+
+            <div className="mt-4 pt-3 border-t border-border">
+              {submitted ? (
+                <div className="flex flex-col items-center gap-2">
+                  <p className="text-xs font-bold text-primary">🏆 ランキングに登録したパフ！</p>
+                  <button
+                    onClick={() => navigate("/ranking")}
+                    className="text-xs font-bold text-foreground underline"
+                  >
+                    ランキングを見る →
+                  </button>
+                </div>
+              ) : (
+                <div className="flex flex-col gap-2">
+                  <p className="text-[11px] font-bold text-muted-foreground text-left">
+                    🏆 ランキングに登録（任意）
+                  </p>
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={nickname}
+                      onChange={(e) => setNickname(e.target.value)}
+                      placeholder="ニックネーム（任意）"
+                      maxLength={20}
+                      className="flex-1 px-3 py-2 rounded-full bg-secondary border border-border text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                    />
+                    <button
+                      onClick={handleSubmitRanking}
+                      disabled={submitting}
+                      className="flex items-center gap-1 px-4 py-2 rounded-full bg-primary text-primary-foreground font-bold text-xs shadow-sm hover:scale-105 active:scale-95 transition-transform disabled:opacity-50"
+                    >
+                      <Send size={12} />
+                      {submitting ? "送信中" : "登録"}
+                    </button>
+                  </div>
+                  <p className="text-[10px] text-muted-foreground text-left">
+                    ※ 未入力なら「ゲスト」として登録されます
+                  </p>
+                </div>
+              )}
+            </div>
           </div>
         )}
 

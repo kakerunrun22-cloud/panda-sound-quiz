@@ -9,6 +9,7 @@ import ModeB from "./pages/ModeB.tsx";
 import Memory from "./pages/Memory.tsx";
 import Encyclopedia from "./pages/Encyclopedia.tsx";
 import Stats from "./pages/Stats.tsx";
+import Ranking from "./pages/Ranking.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -26,6 +27,7 @@ const App = () => (
           <Route path="/memory" element={<Memory />} />
           <Route path="/encyclopedia" element={<Encyclopedia />} />
           <Route path="/stats" element={<Stats />} />
+          <Route path="/ranking" element={<Ranking />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

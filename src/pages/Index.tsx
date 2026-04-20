@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { HelpCircle, Scale, Spade, BookOpen, BarChart3 } from "lucide-react";
+import { HelpCircle, Scale, Spade, BookOpen, BarChart3, Trophy } from "lucide-react";
 import PandaDoctor from "@/components/PandaDoctor";
 import MenuCard from "@/components/MenuCard";
 
@@ -55,6 +55,13 @@ const Index = () => {
         >
           <BarChart3 size={16} className="text-primary" />
           成績スタジオ
+        </button>
+        <button
+          onClick={() => navigate("/ranking")}
+          className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-card border-2 border-primary/30 text-foreground font-bold text-sm shadow-sm hover:scale-105 active:scale-95 transition-transform"
+        >
+          <Trophy size={16} className="text-primary" />
+          ランキング
         </button>
       </div>
     </div>
