@@ -14,7 +14,33 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      memory_rankings: {
+        Row: {
+          created_at: string
+          difficulty: string
+          id: string
+          misses: number
+          nickname: string
+          time_sec: number
+        }
+        Insert: {
+          created_at?: string
+          difficulty: string
+          id?: string
+          misses: number
+          nickname?: string
+          time_sec: number
+        }
+        Update: {
+          created_at?: string
+          difficulty?: string
+          id?: string
+          misses?: number
+          nickname?: string
+          time_sec?: number
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
