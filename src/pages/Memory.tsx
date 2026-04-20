@@ -301,6 +301,47 @@ const Memory = () => {
               )} / ミス
               {(difficulty === "easy" ? easyBest : hardBest).bestMisses ?? "—"}
             </p>
+
+            <div className="mt-4 pt-3 border-t border-border">
+              {submitted ? (
+                <div className="flex flex-col items-center gap-2">
+                  <p className="text-xs font-bold text-primary">🏆 ランキングに登録したパフ！</p>
+                  <button
+                    onClick={() => navigate("/ranking")}
+                    className="text-xs font-bold text-foreground underline"
+                  >
+                    ランキングを見る →
+                  </button>
+                </div>
+              ) : (
+                <div className="flex flex-col gap-2">
+                  <p className="text-[11px] font-bold text-muted-foreground text-left">
+                    🏆 ランキングに登録（任意）
+                  </p>
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={nickname}
+                      onChange={(e) => setNickname(e.target.value)}
+                      placeholder="ニックネーム（任意）"
+                      maxLength={20}
+                      className="flex-1 px-3 py-2 rounded-full bg-secondary border border-border text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                    />
+                    <button
+                      onClick={handleSubmitRanking}
+                      disabled={submitting}
+                      className="flex items-center gap-1 px-4 py-2 rounded-full bg-primary text-primary-foreground font-bold text-xs shadow-sm hover:scale-105 active:scale-95 transition-transform disabled:opacity-50"
+                    >
+                      <Send size={12} />
+                      {submitting ? "送信中" : "登録"}
+                    </button>
+                  </div>
+                  <p className="text-[10px] text-muted-foreground text-left">
+                    ※ 未入力なら「ゲスト」として登録されます
+                  </p>
+                </div>
+              )}
+            </div>
           </div>
         )}
 
