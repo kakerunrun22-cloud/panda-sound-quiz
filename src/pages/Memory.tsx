@@ -1,10 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { ArrowLeft, RotateCcw, Volume2, Trophy, Music } from "lucide-react";
+import { ArrowLeft, RotateCcw, Volume2, Trophy, Music, Send } from "lucide-react";
 import PandaDoctor from "@/components/PandaDoctor";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { useStats } from "@/hooks/useStats";
+import { getSavedNickname, submitRanking } from "@/hooks/useRanking";
 import { quizData, type QuizQuestion } from "@/data/quizData";
 
 interface Card {
